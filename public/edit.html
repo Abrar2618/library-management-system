@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Edit Book</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <h1>Edit Book</h1>
+
+    <form id="editForm">
+
+        <input type="text" id="title" placeholder="Title">
+        <br><br>
+
+        <input type="text" id="author" placeholder="Author">
+        <br><br>
+
+        <input type="number" id="price" placeholder="Price">
+        <br><br>
+
+        <button type="submit">Update Book</button>
+
+    </form>
+
+    <script>
+
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            const price = document.getElementById('price').value;
+
+            fetch(`/update/${id}?title=${title}&author=${author}&price=${price}`)
+            .then(res => res.text())
+            .then(data => {
+                alert(data);
+                window.location.href = "/books.html";
+            });
+
+        });
+
+    </script>
+
+</body>
+
+</html>
