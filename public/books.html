@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Library Management System</title>
+    <title>All Books</title>
 
     <style>
         body {
@@ -18,7 +18,6 @@
             background: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
         h2 {
@@ -26,13 +25,12 @@
             background: #333;
             color: white;
             padding: 10px;
-            border-radius: 5px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         th, td {
@@ -46,33 +44,22 @@
             color: white;
         }
 
-        tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-
         .btn {
-            padding: 6px 12px;
+            padding: 5px 10px;
             border: none;
             cursor: pointer;
             border-radius: 4px;
             color: white;
-            font-size: 14px;
         }
 
-        .delete {
-            background: red;
-        }
-
-        .edit {
-            background: orange;
-        }
+        .delete { background: red; }
+        .edit { background: orange; }
     </style>
 </head>
 
 <body>
 
 <div class="container">
-
     <h2>All Books</h2>
 
     <table>
@@ -86,22 +73,44 @@
             </tr>
         </thead>
 
-        <tbody>
-            <!-- Example Row -->
-            <tr>
-                <td>20</td>
-                <td>Harry Potter</td>
-                <td>J.K Rowling</td>
-                <td>550</td>
-                <td>
-                    <button class="btn delete">Delete</button>
-                    <button class="btn edit">Edit</button>
-                </td>
-            </tr>
+        <tbody id="bookTable">
+            <!-- DATA WILL LOAD HERE -->
         </tbody>
     </table>
-
 </div>
+
+<script>
+    let books = JSON.parse(localStorage.getItem("books")) || [];
+
+    let table = document.getElementById("bookTable");
+
+    function loadBooks() {
+        table.innerHTML = "";
+
+        books.forEach((book, index) => {
+            table.innerHTML += `
+                <tr>
+                    <td>${book.id}</td>
+                    <td>${book.title}</td>
+                    <td>${book.author}</td>
+                    <td>${book.price}</td>
+                    <td>
+                        <button class="btn delete" onclick="deleteBook(${index})">Delete</button>
+                        <button class="btn edit">Edit</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function deleteBook(index) {
+        books.splice(index, 1);
+        localStorage.setItem("books", JSON.stringify(books));
+        loadBooks();
+    }
+
+    loadBooks();
+</script>
 
 </body>
 </html>
