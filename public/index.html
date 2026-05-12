@@ -1,8 +1,85 @@
-<form action="/addbook">
-  <input name="title" placeholder="Book Name" required>
-  <input name="author" placeholder="Author" required>
-  <input name="price" placeholder="Price" required>
-  <button type="submit">Add Book</button>
-</form>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Book</title>
 
-<a href="/books.html">View Books</a>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 300px;
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h2 {
+            background: #333;
+            color: white;
+            padding: 10px;
+            margin: -30px -30px 20px -30px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: darkgreen;
+        }
+
+        a {
+            display: block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Add Book</h2>
+
+    <form action="/addbook">
+        <input type="text" name="title" placeholder="Book Title" required>
+        <input type="text" name="author" placeholder="Author" required>
+        <input type="number" name="price" placeholder="Price" required>
+
+        <button type="submit">Add Book</button>
+    </form>
+
+    <a href="/books.html">View Books</a>
+
+</div>
+
+</body>
+</html>
