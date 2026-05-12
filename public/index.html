@@ -1,30 +1,8 @@
-<!DOCTYPE html>
-<html>
+<form action="/addbook">
+  <input name="title" placeholder="Book Name" required>
+  <input name="author" placeholder="Author" required>
+  <input name="price" placeholder="Price" required>
+  <button type="submit">Add Book</button>
+</form>
 
-<head>
-    <title>Library Management</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-    <h1>Add Book</h1>
-
-    <form action="/addbook" method="GET">
-
-        <input type="text" name="title" placeholder="Book Title">
-        <br><br>
-
-        <input type="text" name="author" placeholder="Author">
-        <br><br>
-
-        <input type="number" name="price" placeholder="Price">
-        <br><br>
-
-        <button type="submit">Add Book</button>
-
-    </form>
-
-</body>
-
-</html>
+<a href="/books.html">View Books</a>

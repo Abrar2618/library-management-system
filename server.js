@@ -1,150 +1,79 @@
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
+const fs = require('fs');
 
 const app = express();
-
 app.use(express.static('public'));
 
-// Database connection
-const db = new sqlite3.Database('./library.db', (err) => {
-    if (err) {
-        console.log(err.message);
-    } else {
-        console.log('SQLite Connected');
+// =======================
+// FILE DATABASE
+// =======================
+const DATA_FILE = 'books.json';
+
+// Get books
+function getBooks() {
+    if (!fs.existsSync(DATA_FILE)) {
+        fs.writeFileSync(DATA_FILE, JSON.stringify([]));
     }
-});
+    return JSON.parse(fs.readFileSync(DATA_FILE));
+}
 
-// Create table if not exists
-db.run(`CREATE TABLE IF NOT EXISTS books (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT,
-    author TEXT,
-    price INTEGER
-)`);
+// Save books
+function saveBooks(data) {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+}
 
-// HOME REDIRECT
+// =======================
+// HOME
+// =======================
 app.get('/', (req, res) => {
-    res.redirect('/home.html');
+    res.sendFile(__dirname + '/public/index.html');
 });
 
-// Add dummy book
-app.get('/add', (req, res) => {
-
-    const sql = `
-        INSERT INTO books(title, author, price)
-        VALUES (?, ?, ?)
-    `;
-
-    db.run(sql, ['Harry Potter', 'J.K Rowling', 500], (err) => {
-
-        if (err) {
-            console.log(err.message);
-        } else {
-            res.send('Book Added Successfully');
-        }
-    });
-});
-
-// ADD BOOK FROM FORM (UPDATED FLOW)
+// =======================
+// ADD BOOK
+// =======================
 app.get('/addbook', (req, res) => {
-
     const { title, author, price } = req.query;
 
-    const sql = `
-        INSERT INTO books(title, author, price)
-        VALUES (?, ?, ?)
-    `;
+    let books = getBooks();
 
-    db.run(sql, [title, author, price], (err) => {
-
-        if (err) {
-            console.log(err.message);
-            res.send('Error adding book');
-        } else {
-            // ⭐ IMPORTANT CHANGE (AUTO REDIRECT)
-            res.redirect('/books.html');
-        }
+    books.push({
+        id: Date.now(),
+        title,
+        author,
+        price
     });
+
+    saveBooks(books);
+
+    res.redirect('/books.html');
 });
 
+// =======================
 // GET ALL BOOKS
+// =======================
 app.get('/books', (req, res) => {
-
-    const sql = `SELECT * FROM books`;
-
-    db.all(sql, [], (err, rows) => {
-
-        if (err) {
-            console.log(err.message);
-        } else {
-            res.json(rows);
-        }
-    });
+    res.json(getBooks());
 });
 
+// =======================
 // DELETE BOOK
+// =======================
 app.get('/delete/:id', (req, res) => {
+    let books = getBooks();
 
-    const id = req.params.id;
+    books = books.filter(b => b.id != req.params.id);
 
-    const sql = `DELETE FROM books WHERE id = ?`;
+    saveBooks(books);
 
-    db.run(sql, [id], (err) => {
-
-        if (err) {
-            console.log(err.message);
-            res.send('Error deleting book');
-        } else {
-            res.redirect('/books.html');
-        }
-    });
+    res.redirect('/books.html');
 });
 
-// UPDATE BOOK
-app.get('/update/:id', (req, res) => {
-
-    const id = req.params.id;
-    const { title, author, price } = req.query;
-
-    const sql = `
-        UPDATE books 
-        SET title = ?, author = ?, price = ?
-        WHERE id = ?
-    `;
-
-    db.run(sql, [title, author, price, id], (err) => {
-
-        if (err) {
-            console.log(err.message);
-            res.send('Error updating book');
-        } else {
-            res.redirect('/books.html');
-        }
-    });
-});
-
-// SEARCH BOOK
-app.get('/search', (req, res) => {
-
-    const keyword = req.query.q;
-
-    const sql = `
-        SELECT * FROM books 
-        WHERE title LIKE ?
-        OR author LIKE ?
-    `;
-
-    db.all(sql, [`%${keyword}%`, `%${keyword}%`], (err, rows) => {
-
-        if (err) {
-            console.log(err.message);
-        } else {
-            res.json(rows);
-        }
-    });
-});
-
+// =======================
 // START SERVER
-app.listen(8000, () => {
-    console.log('Server running on port 8000');
+// =======================
+const PORT = process.env.PORT || 8000;
+
+app.listen(PORT, () => {
+    console.log("Server running on port " + PORT);
 });
