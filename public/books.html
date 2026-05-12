@@ -1,22 +1,107 @@
-<h2>Books List</h2>
-<div id="list"></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Library Management System</title>
 
-<script>
-fetch('/books')
-.then(res => res.json())
-.then(data => {
-    let html = "";
-    data.forEach(b => {
-        html += `
-        <div>
-            <h3>${b.title}</h3>
-            <p>${b.author}</p>
-            <p>${b.price}</p>
-            <a href="/delete/${b.id}">Delete</a>
-        </div>
-        <hr>
-        `;
-    });
-    document.getElementById("list").innerHTML = html;
-});
-</script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            background: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #444;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .delete {
+            background: red;
+        }
+
+        .edit {
+            background: orange;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>All Books</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <!-- Example Row -->
+            <tr>
+                <td>20</td>
+                <td>Harry Potter</td>
+                <td>J.K Rowling</td>
+                <td>550</td>
+                <td>
+                    <button class="btn delete">Delete</button>
+                    <button class="btn edit">Edit</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
