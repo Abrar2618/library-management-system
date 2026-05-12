@@ -1,116 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>All Books</title>
+    <title>Library Books</title>
+    <link rel="stylesheet" href="style.css">
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            width: 90%;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-        }
-
-        h2 {
-            text-align: center;
-            background: #333;
-            color: white;
-            padding: 10px;
-        }
-
         table {
-            width: 100%;
+            width: 85%;
+            margin: 40px auto;
             border-collapse: collapse;
-            margin-top: 15px;
+            background: white;
+            box-shadow: 0 0 10px #ccc;
         }
 
         th, td {
             padding: 12px;
-            text-align: center;
             border: 1px solid #ddd;
+            text-align: center;
         }
 
         th {
-            background: #444;
+            background: #333;
             color: white;
         }
 
-        .btn {
+        a {
+            text-decoration: none;
             padding: 5px 10px;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
+            margin: 2px;
+            display: inline-block;
+            border-radius: 5px;
+        }
+
+        .delete {
+            background: red;
             color: white;
         }
 
-        .delete { background: red; }
-        .edit { background: orange; }
+        .edit {
+            background: orange;
+            color: white;
+        }
     </style>
 </head>
 
 <body>
 
-<div class="container">
-    <h2>All Books</h2>
+    <h1>All Books</h1>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Price</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-
-        <tbody id="bookTable">
-            <!-- DATA WILL LOAD HERE -->
-        </tbody>
+    <table id="bookTable">
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
     </table>
-</div>
 
-<script>
-    let books = JSON.parse(localStorage.getItem("books")) || [];
+    <script>
 
-    let table = document.getElementById("bookTable");
+        fetch('/books')
+        .then(res => res.json())
+        .then(data => {
 
-    function loadBooks() {
-        table.innerHTML = "";
+            let table = document.getElementById('bookTable');
 
-        books.forEach((book, index) => {
-            table.innerHTML += `
-                <tr>
+            data.forEach(book => {
+
+                let row = table.insertRow();
+
+                row.innerHTML = `
                     <td>${book.id}</td>
                     <td>${book.title}</td>
                     <td>${book.author}</td>
                     <td>${book.price}</td>
                     <td>
-                        <button class="btn delete" onclick="deleteBook(${index})">Delete</button>
-                        <button class="btn edit">Edit</button>
+                        <a class="delete" href="/delete/${book.id}">Delete</a>
+                        <a class="edit" href="/edit.html?id=${book.id}">Edit</a>
                     </td>
-                </tr>
-            `;
+                `;
+            });
+
         });
-    }
 
-    function deleteBook(index) {
-        books.splice(index, 1);
-        localStorage.setItem("books", JSON.stringify(books));
-        loadBooks();
-    }
-
-    loadBooks();
-</script>
+    </script>
 
 </body>
+
 </html>
